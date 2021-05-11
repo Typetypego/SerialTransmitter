@@ -39,7 +39,7 @@ uint8_t TX_frequency = 0x5a;    //24L01频率初始化为18
 uint8_t RX_frequency = 0x5a;  //24L01频率初始化为18
 unsigned int time_count = 0;
 uint8_t Check = 0x00;
-uint8_t CheckBuf[1] = {0xff};
+// uint8_t CheckBuf[1] = {0xff};
 uint8_t test_flag = 0;
 /* USER CODE END PTD */
 
@@ -285,16 +285,17 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
             // 判断配置包
             Check = (tx_buf[0] + tx_buf[1] + tx_buf[2] + tx_buf[3] + tx_buf[4]) & 0xff;
-            CheckBuf[0] = Check;
-            HAL_UART_Transmit(&huart3, CheckBuf, 1, 0xff);
-            CheckBuf[0] = 0xff;
+            // test
+            // CheckBuf[0] = Check;
+            // HAL_UART_Transmit(&huart3, CheckBuf, 1, 0xff);
+            // CheckBuf[0] = 0xff;
             if( tx_buf[0] == 0xf0 && tx_buf[5] == Check )
             {
                 switch ( tx_buf[3] )
                 {
                     case 0x01:
                         TX_frequency = tx_buf[1];
-                        TX_Mode();
+                        TX_Mode();  // Updata frequency
                         break;
                     case 0x02:
                         RX_frequency = tx_buf[2];
@@ -310,9 +311,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                         break;
                 }
                 Check = 0x00;   // Initial value
-                // CheckBuf[0] = 0x88;  // Check Success
-                CheckBuf[0] = TX_frequency;  // Check Freq
-                HAL_UART_Transmit(&huart3, CheckBuf, 1, 0xff);
+                // test
+                // // CheckBuf[0] = 0x88;  // Check Success
+                // CheckBuf[0] = TX_frequency;  // Check Freq
+                // HAL_UART_Transmit(&huart3, CheckBuf, 1, 0xff);
             }
             else
             {
